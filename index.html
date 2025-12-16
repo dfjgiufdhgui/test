@@ -50,13 +50,10 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            /* لضمان تغطية الشاشة حتى لو تغير حجمها */
             width: 100vw; 
             height: 100vh;
-            /* للتوسيط */
             transform: translateX(-50%) translateY(-50%); 
             z-index: 1; 
-            /* لزيادة التغطية (اختياري) */
             min-width: 1000%;
             min-height: 1000%;
         }
@@ -64,7 +61,7 @@
 </head>
 <body>
     <iframe id="youtube-background"
-        src="https://www.youtube.com/embed/dXcJZ8CCO5s?&autoplay=1&loop=1&playlist=[VIDEO_ID]&mute=1&controls=0&modestbranding=1"
+        src="https://www.youtube.com/embed/dXcJZ8CCO5s?&autoplay=1&loop=1&playlist=dXcJZ8CCO5s&mute=1&controls=0&modestbranding=1"
         frameborder="0"
         allow="autoplay; encrypted-media; loop"
         allowfullscreen>
@@ -82,7 +79,6 @@
         document.addEventListener('DOMContentLoaded', (event) => {
             const audio = document.getElementById('background-audio');
 
-            // محاولة إجبار تشغيل الصوت (قد يفشل بسبب قيود المتصفح)
             audio.volume = 0.5; 
             audio.play().catch(error => {
                 console.log("Audio Autoplay blocked. Needs user interaction.");

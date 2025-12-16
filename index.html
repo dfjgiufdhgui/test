@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SECURITY OVERRIDE - FINAL FIX</title>
+    <title>SECURITY OVERRIDE - FINAL ATTEMPT</title>
     <style>
-        /* (Style remains the same as your latest version) */
+        /* (Style remains the same as previous version) */
         html, body {
             margin: 0;
             padding: 0;
@@ -18,7 +18,7 @@
             background-color: transparent;
             color: white;
             display: flex;
-            flex-direction: column; /* الترتيب الرأسي */
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             font-family: monospace;
@@ -54,18 +54,6 @@
             z-index: 1;
             overflow: hidden;
         }
-
-        #play-button {
-            background-color: #f00;
-            color: white;
-            padding: 10px 20px;
-            border: 2px solid white;
-            cursor: pointer;
-            font-size: 20px;
-            margin-top: 30px;
-            z-index: 12;
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -75,7 +63,7 @@
         المتصفح لا يدعم وسم الفيديو.
     </video>
     
-    <audio id="background-audio" loop>
+    <audio id="background-audio" loop autoplay>
         <source src="//dfjgiufdhgui.github.io/test/m1.mp3" type="audio/mp3">
     </audio>
 
@@ -83,31 +71,16 @@
     <h1>[ Hacked By Abuda7m | My user in Dicoed 6ggr ]</h1>
     <p>shhhhhhh</p>
     
-    <button id="play-button">انقر لتشغيل الصوت</button>
-
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             const audio = document.getElementById('background-audio');
-            const video = document.getElementById('background-video');
-            const playButton = document.getElementById('play-button');
             
+            // محاولة ضبط مستوى الصوت (سواء نجح التشغيل التلقائي أم فشل)
             audio.volume = 0.5;
 
-            // محاولة تشغيل الفيديو (ناجحة لأنه مكتوم)
-            video.play().catch(error => {
-                 console.error("Video Autoplay blocked:", error);
-            });
-
-            // محاولة تشغيل الصوت (تفشل غالبًا)
+            // إذا فشل التشغيل التلقائي الآن، سيظهر في الكونسول فقط ولن يتم تشغيل الصوت
             audio.play().catch(error => {
-                 console.warn("Audio Autoplay blocked. Showing button.");
-                 playButton.style.display = 'block';
-
-                 // تفعيل التشغيل عند النقر
-                 playButton.addEventListener('click', () => {
-                     audio.play();
-                     playButton.style.display = 'none';
-                 });
+                 console.error("Audio failed to autoplay without user interaction.");
             });
         });
     </script>

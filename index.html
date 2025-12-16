@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SECURITY OVERRIDE - TEST</title>
+    <title>SECURITY OVERRIDE - FIXED</title>
     <style>
         /* 1. إعدادات الصفحة الأساسية */
         html, body {
@@ -11,13 +11,13 @@
             height: 100%;
             overflow: hidden;
             box-sizing: border-box;
-            position: relative; 
+            position: relative; /* الإطار الرئيسي */
         }
         
         /* 2. تنسيق المحتوى النصي (فوق الفيديو) */
         body {
             background-color: transparent;
-            color: white; /* النص باللون الأبيض */
+            color: white; 
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -25,10 +25,9 @@
             font-family: monospace;
             font-size: 30px;
             text-align: center;
+            /* أصبح z-index: 10 هنا لضمان الظهور فوق كل شيء */
             z-index: 10; 
-            position: absolute; 
-            top: 0;
-            left: 0;
+            position: relative; /* يجب أن يكون النص هنا */
             width: 100%;
             height: 100%;
         }
@@ -39,9 +38,10 @@
             display: inline-block;
             padding: 20px;
             box-shadow: 0 0 20px white;
-            background-color: rgba(0, 0, 0, 0.7); /* خلفية نصف شفافة لتمييز النص */
+            background-color: rgba(0, 0, 0, 0.85); /* خلفية داكنة أكثر لضمان رؤية النص */
             animation: blink 0.5s step-end infinite;
             margin-bottom: 20px;
+            z-index: 12; /* أعلى من أي شيء آخر */
         }
         @keyframes blink { 50% { visibility: hidden; } }
 
@@ -50,15 +50,26 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            /* لضمان التغطية الكاملة للشاشة (يعادل 1920x1080 وأكثر) */
             min-width: 100%;
             min-height: 100%;
             width: auto;
             height: auto;
-            /* للتوسيط */
             transform: translateX(-50%) translateY(-50%);
-            z-index: 1; /* يجب أن يكون خلف النص */
+            z-index: 1; /* يجب أن يكون في الخلف */
             overflow: hidden;
+        }
+
+        /* 5. تنسيق زر تشغيل الصوت (يظهر فقط إذا فشل التشغيل التلقائي) */
+        #play-button {
+            background-color: #f00;
+            color: white;
+            padding: 10px 20px;
+            border: 2px solid white;
+            cursor: pointer;
+            font-size: 20px;
+            margin-top: 30px;
+            z-index: 12;
+            display: none; /* مخفي مبدئياً */
         }
     </style>
 </head>
@@ -68,29 +79,40 @@
         المتصفح لا يدعم وسم الفيديو.
     </video>
     
-    <audio id="background-audio" loop autoplay>
+    <audio id="background-audio" loop>
         <source src="//dfjgiufdhgui.github.io/test/m1.mp3" type="audio/mp3">
     </audio>
 
-    <h1>[ Hacked By Abuda7m ]</h1>
+    <h1>[ Hacked By Abuda7m | My user in Dicoed 6ggr ]</h1>
     <p>A لعيون ديسكورد الأستراحة</p>
     <p>shhhhhhh</p>
     
+    <button id="play-button">انقر لتشغيل الصوت</button>
+
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             const audio = document.getElementById('background-audio');
             const video = document.getElementById('background-video');
+            const playButton = document.getElementById('play-button');
             
             audio.volume = 0.5; // مستوى الصوت
 
-            // محاولة تشغيل الفيديو أولاً (بشكل صامت لتجاوز قيود المتصفح)
+            // 1. محاولة تشغيل الفيديو أولاً (لأنه صامت)
             video.play().catch(error => {
-                console.log("Video Autoplay blocked.");
+                console.error("Video Autoplay blocked:", error);
             });
 
-            // محاولة تشغيل الصوت
+            // 2. محاولة تشغيل الصوت
             audio.play().catch(error => {
-                console.log("Audio Autoplay blocked. Needs user interaction.");
+                console.warn("Audio Autoplay blocked. Showing button.");
+                // إذا فشل التشغيل التلقائي للصوت، نظهر الزر
+                playButton.style.display = 'block';
+
+                // نربط الزر بتشغيل الصوت
+                playButton.addEventListener('click', () => {
+                    audio.play();
+                    playButton.style.display = 'none'; // نخفي الزر بعد النقر
+                });
             });
         });
     </script>

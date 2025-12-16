@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SECURITY OVERRIDE</title>
+    <title>SECURITY OVERRIDE - YOUTUBE TEST</title>
     <style>
-        /* CSS لضمان ملء الشاشة بالكامل */
+        /* 1. إعدادات الصفحة الأساسية */
         html, body {
             margin: 0;
             padding: 0;
@@ -11,28 +11,83 @@
             height: 100%;
             overflow: hidden;
             box-sizing: border-box;
+            position: relative; 
         }
+        
+        /* 2. تنسيق المحتوى النصي (فوق الفيديو) */
         body {
-            background-color: #330000; /* خلفية داكنة */
-            color: #ff0000; /* نص أحمر */
+            background-color: transparent;
+            color: white; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             font-family: monospace;
-            text-align: center;
-            padding-top: 20vh;
             font-size: 30px;
+            text-align: center;
+            z-index: 10; 
+            position: absolute; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
+        
+        /* 3. تنسيق العنوان */
         h1 {
-            border: 5px solid #ff0000;
+            border: 5px solid white;
             display: inline-block;
             padding: 20px;
-            box-shadow: 0 0 20px #ff0000;
+            box-shadow: 0 0 20px white;
+            background-color: rgba(0, 0, 0, 0.7); 
             animation: blink 0.5s step-end infinite;
+            margin-bottom: 20px;
         }
         @keyframes blink { 50% { visibility: hidden; } }
+
+        /* 4. تنسيق إطار يوتيوب كخلفية (يغطي كل شيء) */
+        #youtube-background {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            /* لضمان تغطية الشاشة حتى لو تغير حجمها */
+            width: 100vw; 
+            height: 100vh;
+            /* للتوسيط */
+            transform: translateX(-50%) translateY(-50%); 
+            z-index: 1; 
+            /* لزيادة التغطية (اختياري) */
+            min-width: 1000%;
+            min-height: 1000%;
+        }
     </style>
 </head>
 <body>
-    <h1>[ Hacked By Abuda7m  ]</h1>
-    <p>A لعيون ديسكورد الأستراحة </p>
+    <iframe id="youtube-background"
+        src="https://www.youtube.com/embed/dXcJZ8CCO5s?&autoplay=1&loop=1&playlist=[VIDEO_ID]&mute=1&controls=0&modestbranding=1"
+        frameborder="0"
+        allow="autoplay; encrypted-media; loop"
+        allowfullscreen>
+    </iframe>
+    
+    <audio id="background-audio" loop autoplay>
+        <source src="//dfjgiufdhgui.github.io/test/m1.mp3" type="audio/mp3">
+    </audio>
+
+    <h1>[ Hacked By Abuda7m ]</h1>
+    <p>A لعيون ديسكورد الأستراحة</p>
     <p>shhhhhhh</p>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const audio = document.getElementById('background-audio');
+
+            // محاولة إجبار تشغيل الصوت (قد يفشل بسبب قيود المتصفح)
+            audio.volume = 0.5; 
+            audio.play().catch(error => {
+                console.log("Audio Autoplay blocked. Needs user interaction.");
+            });
+        });
+    </script>
 </body>
 </html>

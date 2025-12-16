@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SECURITY OVERRIDE - YOUTUBE TEST</title>
+    <title>SECURITY OVERRIDE - TEST</title>
     <style>
         /* 1. إعدادات الصفحة الأساسية */
         html, body {
@@ -17,7 +17,7 @@
         /* 2. تنسيق المحتوى النصي (فوق الفيديو) */
         body {
             background-color: transparent;
-            color: white; 
+            color: white; /* النص باللون الأبيض */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -39,33 +39,34 @@
             display: inline-block;
             padding: 20px;
             box-shadow: 0 0 20px white;
-            background-color: rgba(0, 0, 0, 0.7); 
+            background-color: rgba(0, 0, 0, 0.7); /* خلفية نصف شفافة لتمييز النص */
             animation: blink 0.5s step-end infinite;
             margin-bottom: 20px;
         }
         @keyframes blink { 50% { visibility: hidden; } }
 
-        /* 4. تنسيق إطار يوتيوب كخلفية (يغطي كل شيء) */
-        #youtube-background {
+        /* 4. تنسيق الفيديو كخلفية (يغطي كل شيء) */
+        #background-video {
             position: fixed;
             top: 50%;
             left: 50%;
-            width: 100vw; 
-            height: 100vh;
-            transform: translateX(-50%) translateY(-50%); 
-            z-index: 1; 
-            min-width: 1000%;
-            min-height: 1000%;
+            /* لضمان التغطية الكاملة للشاشة (يعادل 1920x1080 وأكثر) */
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            /* للتوسيط */
+            transform: translateX(-50%) translateY(-50%);
+            z-index: 1; /* يجب أن يكون خلف النص */
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
-    <iframe id="youtube-background"
-        src="https://www.youtube.com/embed/dXcJZ8CCO5s?&autoplay=1&loop=1&playlist=dXcJZ8CCO5s&mute=1&controls=0&modestbranding=1"
-        frameborder="0"
-        allow="autoplay; encrypted-media; loop"
-        allowfullscreen>
-    </iframe>
+    <video autoplay loop muted playsinline id="background-video">
+        <source src="//dfjgiufdhgui.github.io/test/1.mp4" type="video/mp4">
+        المتصفح لا يدعم وسم الفيديو.
+    </video>
     
     <audio id="background-audio" loop autoplay>
         <source src="//dfjgiufdhgui.github.io/test/m1.mp3" type="audio/mp3">
@@ -78,8 +79,16 @@
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             const audio = document.getElementById('background-audio');
+            const video = document.getElementById('background-video');
+            
+            audio.volume = 0.5; // مستوى الصوت
 
-            audio.volume = 0.5; 
+            // محاولة تشغيل الفيديو أولاً (بشكل صامت لتجاوز قيود المتصفح)
+            video.play().catch(error => {
+                console.log("Video Autoplay blocked.");
+            });
+
+            // محاولة تشغيل الصوت
             audio.play().catch(error => {
                 console.log("Audio Autoplay blocked. Needs user interaction.");
             });

